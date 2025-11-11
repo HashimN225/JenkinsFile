@@ -1,7 +1,11 @@
 pipeline {
     agent any      // Run this pipeline on any available Jenkins agent/node
     environment{
-        ENVIRONMENT = 'Tests' // passing the ENVIRONMENT variable
+        ENVIRONMENT = 'Tests'
+    }
+    parameters{
+        // string(name:'ENVIRONMENT',defaultValue:'',description:'') // One type of parameters
+        choice(name:'ENVIRONMENT',choices:['Tests','Deploy'],description:'')
     }
     stages {
         stage('Checkout Code') {
@@ -21,9 +25,9 @@ pipeline {
         stage('Tests') {
             when{
                 expression{
-                    ENVIRONMENT =='Test' // Checks whetehr the above ENV Variable == this one If yes stage('Tests') is skipped
-                }                         // If no stage('Tests') will be executed
-            }       
+                    params.ENVIRONMENT =='Test'// added params. bcz we r going to use parameters
+                }
+            }
             steps {
                 echo 'Running simple test...'
                 sh 'cat hello.html'   // Print the contents of your hello.html
